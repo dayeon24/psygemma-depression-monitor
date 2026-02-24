@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Medgemma Expert Dashboard</title>
+    <style>
+        .evidence-mark {
+            background-color: #e0e7ff; color: #312e81; padding: 0 4px; border-radius: 4px;
+            font-weight: 600; text-decoration: underline; text-decoration-color: #a5b4fc;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .evidence-mark.is-bookmarked {
+            background-color: #fca5a5 !important; color: #7f1d1d !important;
+            text-decoration-color: #ef4444 !important;
+        }
+        .user-highlight {
+            background-color: #fce7f3; color: #9d174d; border-bottom: 2px solid #f472b6; cursor: pointer;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .month-divider { border-left: 1px dashed #e2e8f0; height: 100%; margin-left: -1px; }
+        
+        .report-content h2 { color: #1e293b; font-size: 1.25rem; font-weight: 800; margin-top: 1.5rem; margin-bottom: 0.75rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+        .report-content h3 { color: #4338ca; font-size: 1.1rem; font-weight: 700; margin-top: 1.25rem; }
+        .report-content ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .report-content li { margin-bottom: 0.5rem; line-height: 1.6; }
+        .report-content strong { color: #1e293b; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-6 font-sans">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="bg-white rounded-2xl shadow-sm p-8 mb-6 border-t-8 border-indigo-600 sticky top-0 z-40">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h1 class="text-2xl font-black text-slate-800">Patient 1(ACM8oOw) Dashboard</h1>
+                    <p class="text-slate-400 text-sm font-medium">Review AI Analysis & Manage Bookmarks</p>
+                </div>
+                <div id="timeline-year" class="text-4xl font-black text-indigo-600/10 italic"></div>
+            </div>
+            <div id="timeline-container" class="relative overflow-x-auto custom-scrollbar pb-4" onscroll="updateYearOnScroll()">
+                <div id="timeline-labels" class="flex mb-2 text-[10px] text-slate-500 font-bold min-w-max"></div>
+                <div id="status-plot" class="flex items-center min-w-max h-10 px-2"></div>
+            </div>
+        </header>
+
+        <section class="bg-slate-800 rounded-2xl shadow-xl p-8 mb-8 text-white">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                        Clinical Evidence Bookmarks
+                    </h2>
+                    <p class="text-slate-400 text-xs mt-1">Manage evidence for the final psychiatric report.</p>
+                </div>
+                <button onclick="showFinalReport()" class="bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-lg transition-all">
+                    Generate Medgemma Report
+                </button>
+            </div>
+            <div id="central-bookmark-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[220px] overflow-y-auto custom-scrollbar pr-2">
+                </div>
+        </section>
+
+        <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <div id="modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-4 border-b flex justify-between items-center bg-slate-50">
+                <span id="modal-date-badge" class="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold"></span>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl px-4">&times;</button>
+            </div>
+            <div class="p-10 overflow-y-auto custom-scrollbar">
+                <h4 class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2">AI Summary</h4>
+                <p id="modal-ai-summary" class="text-indigo-900 text-xl font-bold leading-snug mb-8"></p>
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Original Diary</h4>
+                <div id="modal-text-content" class="text-slate-800 leading-relaxed text-2xl font-serif italic select-text" onmouseup="handleTextSelection()" onclick="handleHighlightClick(event)"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="report-modal" class="hidden fixed inset-0 bg-indigo-950/90 backdrop-blur-lg flex items-center justify-center p-6 z-[60]">
+        <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b bg-indigo-50 flex justify-between items-center">
+                <h2 class="text-xl font-black text-indigo-900 flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z"></path><path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"></path></svg>
+                    Clinical Psychiatric Evaluation Report
+                </h2>
+                <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="text-indigo-300 hover:text-indigo-600 text-3xl font-bold">&times;</button>
+            </div>
+            <div id="report-body" class="p-10 overflow-y-auto custom-scrollbar report-content text-slate-700">
+                </div>
+            <div class="p-6 bg-slate-50 border-t flex justify-end">
+                <button onclick="window.print()" class="bg-slate-800 text-white px-6 py-2 rounded-xl font-bold text-sm">Print PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let db = [];
+        let currentIdx = -1;
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        async function loadAndRender() {
+            try {
+                const res = await fetch('./examples/processed_data.json');
+                const rawData = await res.json();
+                const savedBookmarks = JSON.parse(localStorage.getItem('medgemma_bookmarks') || '{}');
+                const savedHTML = JSON.parse(localStorage.getItem('medgemma_html') || '{}');
+                
+                db = rawData.map(item => ({
+                    ...item,
+                    bookmarks: savedBookmarks[item.date] || [],
+                    original_content: savedHTML[item.date] || item.original_content
+                }));
+                db.sort((a, b) => new Date(a.date) - new Date(b.date));
+                renderAll();
+            } catch (e) { console.error("Load Error:", e); }
+        }
+
+        function renderAll() {
+            renderTimeline();
+            renderCards();
+            renderCentralNotes();
+            updateYearOnScroll();
+        }
+
+        function handleTextSelection() {
+            const selection = window.getSelection();
+            const text = selection.toString().trim();
+            if (text.length < 5) return;
+
+            const range = selection.getRangeAt(0);
+            const span = document.createElement('span');
+            span.className = 'user-highlight';
+            span.innerText = text;
+            range.deleteContents();
+            range.insertNode(span);
+            selection.removeAllRanges();
+
+            if (!db[currentIdx].bookmarks.includes(text)) {
+                db[currentIdx].bookmarks.push(text);
+                updateAndSave();
+            }
+        }
+
+        function handleHighlightClick(e) {
+            const text = e.target.innerText;
+            if (e.target.classList.contains('user-highlight')) {
+                const parent = e.target.parentNode;
+                parent.replaceChild(document.createTextNode(text), e.target);
+                parent.normalize();
+                db[currentIdx].bookmarks = db[currentIdx].bookmarks.filter(b => b !== text);
+                updateAndSave();
+            } else if (e.target.classList.contains('evidence-mark')) {
+                const bms = db[currentIdx].bookmarks;
+                const idx = bms.indexOf(text);
+                if (idx > -1) {
+                    bms.splice(idx, 1);
+                    e.target.classList.remove('is-bookmarked');
+                } else {
+                    bms.push(text);
+                    e.target.classList.add('is-bookmarked');
+                }
+                updateAndSave();
+            }
+        }
+
+        function removeBookmarkDirectly(itemIdx, text) {
+            db[itemIdx].bookmarks = db[itemIdx].bookmarks.filter(b => b !== text);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = db[itemIdx].original_content;
+            const highlights = tempDiv.querySelectorAll('.user-highlight, .evidence-mark');
+            highlights.forEach(el => {
+                if (el.innerText === text) {
+                    if (el.classList.contains('evidence-mark')) el.classList.remove('is-bookmarked');
+                    else el.replaceWith(document.createTextNode(text));
+                }
+            });
+            db[itemIdx].original_content = tempDiv.innerHTML;
+            updateAndSave();
+        }
+
+        function updateAndSave() {
+            if(currentIdx !== -1) {
+                const modalContent = document.getElementById('modal-text-content').innerHTML;
+                if(modalContent) db[currentIdx].original_content = modalContent;
+            }
+            saveData();
+            renderCentralNotes();
+            renderCards();
+        }
+
+        function saveData() {
+            const bmObj = {}, htmlObj = {};
+            db.forEach(item => {
+                if(item.bookmarks.length > 0) bmObj[item.date] = item.bookmarks;
+                htmlObj[item.date] = item.original_content;
+            });
+            localStorage.setItem('medgemma_bookmarks', JSON.stringify(bmObj));
+            localStorage.setItem('medgemma_html', JSON.stringify(htmlObj));
+        }
+
+        function renderCentralNotes() {
+            const container = document.getElementById('central-bookmark-list');
+            const all = db.flatMap((item, itemIdx) => item.bookmarks.map(text => ({ date: item.date, text, itemIdx })));
+
+            if (!all.length) {
+                container.innerHTML = `<div class="text-slate-500 text-sm italic py-10 col-span-2 text-center border-2 border-dashed border-slate-700 rounded-xl">No evidence selected.</div>`;
+                return;
+            }
+            container.innerHTML = all.map(bm => `
+                <div class="bg-slate-700 border border-slate-600 p-3 rounded-xl flex justify-between items-start group">
+                    <div class="flex gap-3">
+                        <span class="text-[9px] font-bold bg-indigo-500 px-2 py-1 rounded h-fit">${bm.date}</span>
+                        <p class="text-sm text-slate-200 leading-tight italic">"${bm.text}"</p>
+                    </div>
+                    <button onclick="removeBookmarkDirectly(${bm.itemIdx}, '${bm.text.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-red-400 px-1 font-bold">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('card-grid');
+            grid.innerHTML = db.map((item, idx) => `
+                <div class="rounded-2xl border p-6 flex flex-col bg-${item.color}-50 hover:shadow-lg cursor-pointer transition" onclick="openModal(${idx})">
+                    <div class="flex justify-between mb-4">
+                        <span class="text-xs font-bold text-slate-500">${item.date}</span>
+                        ${item.bookmarks.length ? '<span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>' : ''}
+                    </div>
+                    <p class="text-slate-800 font-bold leading-snug">${item.ai_summary}</p>
+                    <p class="mt-4 text-[10px] text-indigo-500 font-bold uppercase tracking-wider">${item.bookmarks.length} Evidence Selected</p>
+                </div>
+            `).join('');
+        }
+
+        function openModal(idx) {
+            currentIdx = idx;
+            document.getElementById('modal-date-badge').innerText = db[idx].date;
+            document.getElementById('modal-ai-summary').innerText = db[idx].ai_summary;
+            document.getElementById('modal-text-content').innerHTML = db[idx].original_content;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() { 
+            currentIdx = -1;
+            document.getElementById('modal').classList.add('hidden'); 
+        }
+
+async function showFinalReport() {
+    const reportBody = document.getElementById('report-body');
+    const reportModal = document.getElementById('report-modal');
+    
+    // 로딩 처리
+    reportBody.innerHTML = `<p class="text-center py-10 text-indigo-500 animate-pulse">Loading Clinical Report...</p>`;
+    reportModal.classList.remove('hidden');
+
+    try {
+        const response = await fetch('./examples/report.json');
+        if (!response.ok) throw new Error('JSON load failed');
+        const data = await response.json();
+
+        let html = `
+            <p class="text-lg mb-6 text-slate-600">${data.intro}</p>
+            <h2>${data.mainSectionTitle}</h2>
+        `;
+
+        data.categories.forEach(cat => {
+            html += `<h3>${cat.title}</h3>`;
+            html += `<ul>`;
+            cat.items.forEach(item => {
+                html += `<li>${parseBold(item)}</li>`;
+            });
+            html += `</ul>`;
+        });
+
+        if (data.conclusion) {
+            html += `
+                <h2>Conclusion</h2>
+                <p class="bg-indigo-50 p-4 rounded-xl border-l-4 border-indigo-500 font-medium text-indigo-900 shadow-sm">
+                    ${parseBold(data.conclusion)}
+                </p>
+            `;
+        }
+
+        reportBody.innerHTML = html;
+
+    } catch (e) {
+        console.error(e);
+        reportBody.innerHTML = `<p class="text-red-500 text-center py-10 font-bold">Error: Could not load report data.</p>`;
+    }
+}
+
+
+function formatBold(text) {
+    return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-extrabold">$1</strong>');
+}
+        function renderTimeline() {
+            const plot = document.getElementById('status-plot');
+            const labels = document.getElementById('timeline-labels');
+            const start = new Date(db[0].date);
+            const diff = Math.ceil(Math.abs(new Date(db[db.length-1].date) - start) / 86400000);
+            plot.innerHTML = ''; labels.innerHTML = '';
+            let lastM = -1;
+            for (let i = 0; i <= diff; i++) {
+                const cur = new Date(start); cur.setDate(start.getDate() + i);
+                const dStr = cur.toISOString().split('T')[0];
+                const entry = db.find(item => item.date === dStr);
+                const wrap = document.createElement('div');
+                wrap.className = `flex flex-col items-center w-6 ${cur.getMonth() !== lastM && i !== 0 ? 'month-divider' : ''}`;
+                const dot = document.createElement('div');
+                if (entry) {
+                    dot.className = `w-4 h-4 rounded-full bg-${entry.color}-500 ring-2 ring-white shadow-md z-10 cursor-pointer`;
+                    dot.onclick = () => openModal(db.indexOf(entry));
+                } else { dot.className = `w-1 h-1 rounded-full bg-slate-200`; }
+                wrap.appendChild(dot); plot.appendChild(wrap);
+                if (cur.getMonth() !== lastM) {
+                    const lb = document.createElement('div'); lb.className = "w-6 text-center";
+                    lb.innerHTML = `<span class="bg-indigo-600 text-white px-1.5 py-0.5 rounded text-[9px]">${monthNames[cur.getMonth()]}</span>`;
+                    labels.appendChild(lb); lastM = cur.getMonth();
+                } else { labels.appendChild(document.createElement('div')).className="w-6"; }
+            }
+        }
+        function updateYearOnScroll() {
+            const container = document.getElementById('timeline-container');
+            const d = new Date(db[0].date); d.setDate(d.getDate() + Math.floor(container.scrollLeft / 24));
+            document.getElementById('timeline-year').innerText = d.getFullYear();
+        }
+
+        loadAndRender();
+    </script>
+</body>
+</html>

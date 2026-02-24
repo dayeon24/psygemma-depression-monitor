@@ -1,0 +1,31 @@
+{
+  "user_id": "subject_ACM8oOw",
+  "label": 1,
+  "n_posts": 3,
+  "posts": [
+    {
+      "t": "2026-02-01T23:10:00Z",
+      "submission_id": "SYN001",
+      "title": "Can't switch my brain off",
+      "body": "Couldn't fall asleep until almost 3am again. My chest felt tight all evening after that comment from my manager. I keep replaying it in my head. I know it probably wasn't a big deal but my body reacts like it's a crisis. I feel restless and on edge. I skipped dinner because I just didn't feel hungry.",
+      "text": "Can't switch my brain off Couldn't fall asleep until almost 3am again. My chest felt tight all evening after that comment from my manager. I keep replaying it in my head. I know it probably wasn't a big deal but my body reacts like it's a crisis. I feel restless and on edge. I skipped dinner because I just didn't feel hungry.",
+      "n_chars": 428
+    },
+    {
+      "t": "2026-02-03T21:45:00Z",
+      "submission_id": "SYN002",
+      "title": "Everything feels heavy",
+      "body": "I didn't leave the house today. Ignored messages from friends because I didn't have the energy to reply. I keep thinking I'm falling behind in life. It's not that I want to die, but sometimes I wish I could just pause everything. I feel exhausted even though I haven't done much.",
+      "text": "Everything feels heavy I didn't leave the house today. Ignored messages from friends because I didn't have the energy to reply. I keep thinking I'm falling behind in life. It's not that I want to die, but sometimes I wish I could just pause everything. I feel exhausted even though I haven't done much.",
+      "n_chars": 454
+    },
+    {
+      "t": "2026-02-05T18:20:00Z",
+      "submission_id": "SYN003",
+      "title": "Small ups and sudden drops",
+      "body": "This morning I felt almost normal for a few hours. I managed to work a bit. By late afternoon it dropped again. I felt empty and detached. Sleep is getting worse and food doesn't taste like anything. I worry something is wrong with me. I just want stability.",
+      "text": "Small ups and sudden drops This morning I felt almost normal for a few hours. I managed to work a bit. By late afternoon it dropped again. I felt empty and detached. Sleep is getting worse and food doesn't taste like anything. I worry something is wrong with me. I just want stability.",
+      "n_chars": 417
+    }
+  ]
+}

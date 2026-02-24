@@ -1,0 +1,26 @@
+[
+    {
+        "date": "2026-02-05",
+        "status": "NORMAL",
+        "color": "green",
+        "ai_summary": "The patient reports significant mood changes, including feelings of emptiness and detachment, changes in sleep patterns, and alterations in appetite/sensation, along with expressed anxiety about their mental state. These symptoms are consistent with potential depressive disorder.",
+        "original_content": "This morning I felt almost normal for a few hours. I managed to work a bit. By late afternoon it dropped again. <mark class=\"evidence-mark\">I felt empty and detached.</mark> <mark class=\"evidence-mark\">Sleep is getting worse</mark> and <mark class=\"evidence-mark\">food doesn't taste like anything</mark>. <mark class=\"evidence-mark\">I worry something is wrong with me.</mark> I just want stability.",
+        "annotations": []
+    },
+    {
+        "date": "2026-02-03",
+        "status": "OBSERVATION",
+        "color": "yellow",
+        "ai_summary": "The patient exhibits several symptoms consistent with depression, including social withdrawal, fatigue, feelings of hopelessness, and cognitive concerns, warranting further assessment.",
+        "original_content": "<mark class=\"evidence-mark\">I didn't leave the house today.</mark> <mark class=\"evidence-mark\">Ignored messages from friends because I didn't have the energy to reply.</mark> <mark class=\"evidence-mark\">I keep thinking I'm falling behind in life.</mark> <mark class=\"evidence-mark\">It's not that I want to die, but sometimes I wish I could just pause everything.</mark> <mark class=\"evidence-mark\">I feel exhausted even though I haven't done much.</mark>",
+        "annotations": []
+    },
+    {
+        "date": "2026-02-01",
+        "status": "NORMAL",
+        "color": "green",
+        "ai_summary": "The patient exhibits symptoms like chest tightness, rumination, restlessness, and feeling on edge, which are more indicative of anxiety or stress responses. While appetite changes can occur in depression, the context provided points towards anxiety as a more prominent factor in this specific episode. Further assessment is warranted to differentiate between anxiety, stress, and potential depressive symptoms.",
+        "original_content": "Couldn't fall asleep until almost 3am again. <mark class=\"evidence-mark\">My chest felt tight all evening after that comment from my manager.</mark> <mark class=\"evidence-mark\">I keep replaying it in my head.</mark> I know it probably wasn't a big deal but my body reacts like it's a crisis. <mark class=\"evidence-mark\">I feel restless and <mark class=\"evidence-mark\">on edge</mark>.</mark> <mark class=\"evidence-mark\">I skipped dinner because I just didn't feel hungry.</mark>",
+        "annotations": []
+    }
+]
