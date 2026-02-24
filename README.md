@@ -1,2 +1,2 @@
-# psygemma-depression-monitor
-PsyGemma: An AI Assistant for Depression Monitoring from Personal Diaries
+# PsyGemma
+An AI Assistant for Depression Monitoring from Personal Diaries
