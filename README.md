@@ -1,30 +1,27 @@
-# PsyGemma
-An AI Assistant for Depression Monitoring from Personal Diaries
 
 ![PsyGemma Interface](./psygemma.jpg)
 
-📌 Project Overview
-PsyGemma is an advanced clinical support tool that transforms raw patient diary entries into structured medical documentation. By leveraging the MedGemma model, the system identifies depressive markers and maps them directly to DSM-5-TR criteria, enabling clinicians to monitor mental health trajectories with evidence-based precision.
 
-🚀 Core Workflow
-Record: Chronicling daily narratives for longitudinal tracking.
+## Project Overview
+**PsyGemma** is an advanced clinical support tool that transforms raw patient diary entries into structured medical documentation. By leveraging the **MedGemma** model, the system identifies depressive markers and maps them directly to **DSM-5-TR criteria**, enabling clinicians to monitor mental health trajectories with evidence-based precision.
 
-Synthesize: Reconstructing raw text into clinical evidence via MedGemma’s targeted prompting.
 
-Structure: Generating formal reports with risk probability and evidence segments.
+## 1. Core Workflow
+1.	Record: Users record diary entries which the system tracks chronologically.
+2.	Process: Using targeted prompting, MedGemma reconstructs raw narratives into structured clinical documentation.
+3.	Structure: Each entry receives a structured summary, a risk probability, and highlighted evidence segments.
+4.	Visualize: The UI displays daily status using intuitive color coding: Green (no significant signals), Orange (mild/emerging concern), and Red (high-risk linguistic signals).
 
-Visualize: Monitoring status through an intuitive Green-Orange-Red color-coding system.
 
-💻 Key Interface Features
-Interactive Timeline: Visualizing the persistence of clinical symptoms over time.
+## 2. Key Interface Features
+* **Interactive Timeline**: Visualizing the persistence of clinical symptoms over time to track recovery or decline.
+* **Clinical Evidence Dashboard**: Aggregating bookmarked diary segments into consolidated DSM-5-TR clinical reports.
+* **Smart Diaries**: Automatically highlighting clinical evidence within raw logs. 
+    * *Interaction*: Users can **click highlights** or **drag to select** new sentences to bookmark for deeper analysis.
 
-Clinical Evidence Dashboard: Aggregating bookmarked diary segments into consolidated DSM-5-TR reports.
 
-Smart Diaries: Highlighting clinical evidence within raw logs. Users can click highlights or drag to select new sentences to bookmark for deeper analysis.
-
-🧪 Technical Strengths
-Cross-lingual Transferability: Successfully handles Korean narratives without language-specific fine-tuning.
-
-Precise Differentiation: Distinguishes between routine stress and clinical depressive vulnerability.
-
-Evidence-Based: Focuses on "baseline ideation" rather than just isolated crisis spikes.
+## 3. PsyGemma allows clinicians to:
+* Manually highlight key sentences and assign a status—critical, moderate, or normal—to each daily entry
+* Synthesis a DSM-5-TR-based clinical report based only on selected evidence
+  
+**Key Innovation & Impact**: PsyGemma shifts from static classification to temporal risk monitoring, visualizing diary evolution through color-coded signals. Rather than acting as a one-time sentiment analyzer, it functions as a continuous mental health signal interpreter designed for ethical, clinician-centered decision support.
