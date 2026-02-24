@@ -36,7 +36,6 @@
             <div class="flex justify-between items-end mb-6">
                 <div>
                     <h1 class="text-2xl font-black text-slate-800">Patient 1(ACM8oOw) Dashboard</h1>
-                    <p class="text-slate-400 text-sm font-medium">Review AI Analysis & Manage Bookmarks</p>
                 </div>
                 <div id="timeline-year" class="text-4xl font-black text-indigo-600/10 italic"></div>
             </div>
@@ -105,7 +104,7 @@
 
         async function loadAndRender() {
             try {
-                const res = await fetch('./examples/processed_data.json');
+                const res = await fetch('./examples/sample_processed_data.json');
                 const rawData = await res.json();
                 const savedBookmarks = JSON.parse(localStorage.getItem('medgemma_bookmarks') || '{}');
                 const savedHTML = JSON.parse(localStorage.getItem('medgemma_html') || '{}');
